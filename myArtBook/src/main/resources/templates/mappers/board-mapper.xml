@@ -2,6 +2,31 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.artBook.MyartBook.board.model.dao.BoardMapper">
 
+	<insert id="insertBoard" useGeneratedKeys="true">
+		<selectKey resultType="_int" keyProperty="boardNo" order="BEFORE">
+			select seq_bno.nextval from dual
+		</selectKey>
+		insert into board
+		values(#{boardNo}, #{title}, #{intro}, #{content}, #{category}, #{showTitle}, #{artist}, #{startDate}, #{endDate}, default, sysdate)	
+	</insert>
+	
+	
+	<insert id="insertAttm">
+		<foreach collection="list" item="item" open="insert all" close="select * from dual">
+			into attm value(#{attmNo}, #{boardNo}, #{attmPath}, #{originName}, #{newName}, #{attmLevel}, sysdate)		
+		</foreach>
+	</insert>
+
+
+
+
+
+
+
+
+
+
+
 
 
 

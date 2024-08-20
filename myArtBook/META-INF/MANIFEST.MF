@@ -3,11 +3,16 @@ Bundle-ManifestVersion: 2
 Bundle-Name: myArtBook
 Bundle-SymbolicName: myArtBook
 Bundle-Version: 1.0.0.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-17
-Automatic-Module-Name: myArtBook
 Export-Package: com.artBook.demo,
  com.artBook.myArtBook,
+ com.artBook.myArtBook.board.controller,
+ com.artBook.myArtBook.board.model.dao,
+ com.artBook.myArtBook.board.model.service,
+ com.artBook.myArtBook.board.model.vo,
  com.artBook.myArtBook.common.config,
  templates,
+ templates.mappers,
  templates.views.board,
  templates.views.common
+Automatic-Module-Name: myArtBook
+Bundle-RequiredExecutionEnvironment: JavaSE-17

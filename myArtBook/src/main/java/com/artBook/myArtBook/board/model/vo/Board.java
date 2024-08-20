@@ -15,17 +15,20 @@ import lombok.ToString;
 @ToString
 public class Board {
 
+	private int boardNo;
+	
 	private String title;
 	private String intro;
 	private String content;
-	private String category;
+	private int category;
 
 	
 	private String showTitle;
+	private String artist;
 	private Date startDate;
 	private Date endDate;
-	private String artist;
 	
 	private String status;
+	private Date createDate;
 	
 }
