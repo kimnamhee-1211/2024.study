@@ -15,8 +15,6 @@ public interface BoardMapper {
 
 	int insertAttm(ArrayList<Attm> attmList);
 
-	ArrayList<Attm> getMainSlidList();
-
 	ArrayList<BoardAttm> getMainList();
 
 

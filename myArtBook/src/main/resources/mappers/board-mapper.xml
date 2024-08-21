@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.artBook.MyartBook.board.model.dao.BoardMapper">
+<mapper namespace="com.artBook.myArtBook.board.model.dao.BoardMapper">
 
-	<insert id="insertBoard" useGeneratedKeys="true">
+	<insert id="insertBoard">
 		<selectKey resultType="_int" keyProperty="boardNo" order="BEFORE">
 			select seq_bno.nextval from dual
 		</selectKey>
 		insert into board
-		values(#{boardNo}, #{title}, #{intro}, #{content}, #{category}, #{showTitle}, #{artist}, #{startDate}, #{endDate}, default, sysdate)	
+		values(#{boardNo}, #{title}, #{intro}, #{category}, #{showTitle}, #{artist}, #{startDate}, #{endDate}, default, sysdate, #{content})	
 	</insert>
 	
 	
 	<insert id="insertAttm">
-		<foreach collection="list" item="item" open="insert all" close="select * from dual">
-			into attm value(#{attmNo}, #{boardNo}, #{attmPath}, #{originName}, #{newName}, #{attmLevel}, sysdate)		
-		</foreach>
+   	 	insert all
+    	<foreach collection="list" item="item" separator=" ">
+       		into attm
+        	values(new_ano, #{item.boardNo}, #{item.attmPath}, #{item.originName}, #{item.newName},#{item.attmLevel}, sysdate)
+    	</foreach>
+    	select * from dual
 	</insert>
 		
 	
@@ -23,7 +26,7 @@
 		select *
 		from (select *
 			from board
-				join attm using(board_no)
+				left join attm using(board_no)
 			where attm_level = 1	
 			order by board.create_date desc)
 		where rownum <= 6

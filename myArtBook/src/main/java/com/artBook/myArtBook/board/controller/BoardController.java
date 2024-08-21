@@ -17,9 +17,11 @@ import com.artBook.myArtBook.board.model.service.BoardService;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Date;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+
 
 
 @Controller
@@ -33,7 +35,10 @@ public class BoardController {
 	public String goMain(Model model){
 		
 		ArrayList<BoardAttm> list = bService.getMainList();
-			
+		
+		
+		System.out.println(list);
+		
 		model.addAttribute("list", list);
 		return "main";
 	}
@@ -58,12 +63,30 @@ public class BoardController {
 	
 	
 	@PostMapping("writeBoard.bo")
-	public String writeBoard(@ModelAttribute Board b, @RequestParam("sfile") MultipartFile sfile,  @RequestParam("files") ArrayList<MultipartFile> files){
+	public String writeBoard(@ModelAttribute Board b,
+			@RequestParam("start") String start, @RequestParam("end") String end,
+			@RequestParam(value="sfile",  required=false) MultipartFile sfile,  @RequestParam(value="files", required=false) ArrayList<MultipartFile> files){
 		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		java.util.Date startUtilDate = null;
+		java.util.Date endUtilDate = null;
+		try {
+			startUtilDate = sdf.parse(start);
+			endUtilDate = sdf.parse(end);
+			Date startSqlDate = new Date(startUtilDate.getTime());
+	        Date endSqlDate = new Date(endUtilDate.getTime());    
+			
+			b.setStartDate(startSqlDate);
+			b.setEndDate(endSqlDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
 		int result = bService.insertBoard(b);
-	
-		ArrayList<Attm> attmList = new ArrayList<Attm>();	
 		
+		int boarNo = b.getBoardNo();
+		
+		ArrayList<Attm> attmList = new ArrayList<Attm>();			
 		if(sfile != null && !sfile.isEmpty()){
 			Attm sattm = new Attm();
 			
@@ -73,7 +96,7 @@ public class BoardController {
 			sattm.setAttmPath(retrunArr[0]);
 			sattm.setNewName(retrunArr[1]);
 			sattm.setAttmLevel(1);
-			sattm.setBoardNo(b.getBoardNo());
+			sattm.setBoardNo(boarNo);
 			
 			attmList.add(sattm);
 		}	
@@ -89,12 +112,13 @@ public class BoardController {
 				attm.setAttmPath(retrunArr[0]);
 				attm.setNewName(retrunArr[1]);
 				attm.setAttmLevel(2);
-				attm.setBoardNo(b.getBoardNo());
+				attm.setBoardNo(boarNo);
 				
 				attmList.add(attm);
 			}
 		}
 		
+		System.out.println(attmList);
 		if(attmList != null && !attmList.isEmpty()) {
 			int result2 = bService.insertAttm(attmList);
 		}
@@ -118,7 +142,7 @@ public class BoardController {
 		}
 				
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-		Date today = new Date();
+		java.util.Date today = new java.util.Date();
 		int randomNum = ((int)(Math.random()*10000));
 		String renewName = sdf.format(today) + randomNum + file.getOriginalFilename().substring(file.getOriginalFilename().indexOf("."));
 			

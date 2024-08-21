@@ -17,23 +17,17 @@ public class BoardServiceImpl implements BoardService{
 	private BoardMapper bMapper;
 	
 	@Override
-	public int insertBoard(Board b) {
+	public int insertBoard(Board b){
 		return bMapper.insertBoard(b);
 	}
 
 	@Override
-	public int insertAttm(ArrayList<Attm> attmList) {
+	public int insertAttm(ArrayList<Attm> attmList){
 		return bMapper.insertAttm(attmList);
 	}
 
 	@Override
-	public ArrayList<Attm> getMainSlidList() {
-		
-		return bMapper.getMainSlidList();
-	}
-
-	@Override
-	public ArrayList<BoardAttm> getMainList() {
+	public ArrayList<BoardAttm> getMainList(){
 		return bMapper.getMainList();
 	}
 

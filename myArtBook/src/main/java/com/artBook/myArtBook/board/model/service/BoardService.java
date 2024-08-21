@@ -12,8 +12,6 @@ public interface BoardService {
 
 	int insertAttm(ArrayList<Attm> attmList);
 	
-	ArrayList<Attm> getMainSlidList();
-
 	ArrayList<BoardAttm> getMainList();
 
 	

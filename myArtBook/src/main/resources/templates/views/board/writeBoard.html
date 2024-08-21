@@ -52,14 +52,14 @@
 					<div class="row m-4 justify-content-md-center">
 						<div class="col-5 mb-3">
 					  	<label for="startDate" class="form-label">Start Date</label>
-					    <input id="startDate" name="startDate">
+					    <input id="startDate" type="text" name="start">
 					  </div>
 					  <div class="col-1 mt-4 text-center">
 						<h4> ~ </h4>
 					  </div>
 					  <div class="col-5 mb-3">
 					  	<label for="endDate" class="form-label">End Date</label>
-					    <input id="endDate" name="endDate">
+					    <input id="endDate" type="text" name="end">
 					  </div>										
 					</div>
 					
@@ -74,9 +74,9 @@
 					  </div>
 					  <div class="col-3">
 					  	<label for="category" class="form-label">Category</label>
-					    <select id="category" name="category"  class="form-select">
-					      <option selected>회화</option>
-					      <option>조각/설치</option>
+					    <select id="category" name="category" class="form-select">
+					      <option value="1" selected>회화</option>
+					      <option value="2">조각/설치</option>
 					    </select>
 					  </div>
 					</div>
@@ -129,16 +129,18 @@
 	<script th:inline="javascript">
 	
 
-     var today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+     var day = new Date('2000-01-01');
      $('#startDate').datepicker({
+    	 format: "yyyy-mm-dd",
          uiLibrary: 'bootstrap4',
          iconsLibrary: 'fontawesome',
-         minDate: today,
+         minDate: day,
          maxDate: function () {
              return $('#endDate').val();
          }
      });
      $('#endDate').datepicker({
+    	 format: "yyyy-mm-dd",
          uiLibrary: 'bootstrap4',
          iconsLibrary: 'fontawesome',
          minDate: function () {
