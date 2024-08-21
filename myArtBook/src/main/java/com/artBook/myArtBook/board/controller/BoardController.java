@@ -2,6 +2,7 @@ package com.artBook.myArtBook.board.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.artBook.myArtBook.board.model.vo.Attm;
 import com.artBook.myArtBook.board.model.vo.Board;
+import com.artBook.myArtBook.board.model.vo.BoardAttm;
 import com.artBook.myArtBook.board.model.exception.BoardException;
 import com.artBook.myArtBook.board.model.service.BoardService;
 
@@ -28,7 +30,11 @@ public class BoardController {
 	
 	
 	@GetMapping("goMain.bo")
-	public String goMain(){
+	public String goMain(Model model){
+		
+		ArrayList<BoardAttm> list = bService.getMainList();
+			
+		model.addAttribute("list", list);
 		return "main";
 	}
 	

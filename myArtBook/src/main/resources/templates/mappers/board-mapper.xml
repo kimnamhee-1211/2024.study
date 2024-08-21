@@ -16,8 +16,19 @@
 			into attm value(#{attmNo}, #{boardNo}, #{attmPath}, #{originName}, #{newName}, #{attmLevel}, sysdate)		
 		</foreach>
 	</insert>
-
-
+		
+	
+	<select id="getMainList">
+	<![CDATA[
+		select *
+		from (select *
+			from board
+				join attm using(board_no)
+			where attm_level = 1	
+			order by board.create_date desc)
+		where rownum <= 6
+	]]>	
+	</select>
 
 
 

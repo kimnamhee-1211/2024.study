@@ -7,11 +7,42 @@
 	
 <script th:inline="javascript">
 
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	const now = new Date();
+	const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+	const formattedDate = firstDayOfMonth.toISOString().split('T')[0];
+
+
+
 	document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
+    var calendarEl = document.getElementById('calendar');   
+    
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
-      initialDate: '2023-01-12',
+      initialDate: formattedDate,
       editable: true,
       selectable: true,
       businessHours: true,

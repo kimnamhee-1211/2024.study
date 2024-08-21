@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.artBook.myArtBook.board.model.dao.BoardMapper;
 import com.artBook.myArtBook.board.model.vo.Attm;
 import com.artBook.myArtBook.board.model.vo.Board;
+import com.artBook.myArtBook.board.model.vo.BoardAttm;
 
 @Service
 public class BoardServiceImpl implements BoardService{
@@ -24,6 +25,18 @@ public class BoardServiceImpl implements BoardService{
 	public int insertAttm(ArrayList<Attm> attmList) {
 		return bMapper.insertAttm(attmList);
 	}
+
+	@Override
+	public ArrayList<Attm> getMainSlidList() {
+		
+		return bMapper.getMainSlidList();
+	}
+
+	@Override
+	public ArrayList<BoardAttm> getMainList() {
+		return bMapper.getMainList();
+	}
+
 
 	
 	
