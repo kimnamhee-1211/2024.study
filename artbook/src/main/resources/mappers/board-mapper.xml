@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.portfolio.artbook.board.model.dao.BoardMapper">
+
+	<insert id="insertBoard">
+		<selectKey resultType="_int" keyProperty="boardNo" order="BEFORE">
+			select seq_bno.nextval from dual
+		</selectKey>
+		insert into board
+		values(#{boardNo}, #{title}, #{intro}, #{category}, #{showTitle}, #{artist}, #{startDate}, #{endDate}, default, sysdate, #{content}, sysdate, default)	
+	</insert>
+	
+	
+	<insert id="insertAttm">
+   	 	insert all
+    	<foreach collection="list" item="item" separator=" ">
+       		into attm
+        	values(new_ano, #{item.boardNo}, #{item.attmPath}, #{item.originName}, #{item.newName},#{item.attmLevel}, sysdate, sysdate)
+    	</foreach>
+    	select * from dual
+	</insert>
+		
+	
+	<select id="getMainList" resultType="BoardAttm">
+		<![CDATA[
+			select *
+			from (select *
+				from board
+					left join attm using(board_no)
+				where attm_level = 1	
+				order by board.create_date desc)
+			where rownum <= 8
+		]]>	
+	</select>
+
+	<select id="getCList" resultType="Board">
+		select show_title, start_date, end_date
+		from board
+	</select>
+	
+	<select id="getAllList" resultType="BoardAttm">
+		select *
+		from (select *
+			from board
+				left join attm using(board_no)	
+			order by board.create_date desc)
+	</select>
+
+	<select id="getBoardAttm" resultType="BoardAttm">
+		select *
+		from (select *
+			from board
+				left join attm using(board_no)
+			where attm_level = 1)
+		where board_no = #{boardNo}
+	</select>
+
+
+	<select id="getlistCount" resultType="int">
+		select count(*)
+		from attm
+		where board_no = #{boardNo} 
+			and attm_level = 2
+	</select>
+
+	<select id="getAttm2Pi" resultType="string">
+		select new_name
+		from attm
+		where board_no = #{boardNo} 
+			and attm_level = 2
+	</select>
+
+	<select id="getAttm" resultType="Attm">
+		select *
+		from attm
+		where board_no = #{boardNo} 
+	</select>
+
+	<update id="updateBoard">
+		update board
+		set title = #{title}, intro = #{intro}, content = #{content}, category = #{category},
+			show_title = #{showTitle}, artist = #{artist}, start_date = #{startDate}, end_date = #{endDate}, update_date = sysdate
+		where board_no = #{boardNo}
+	</update>
+
+	<delete id="deleteAttmL1">
+		delete from attm
+		where new_name = #{delsImg}	
+	</delete>
+	
+	<delete id="deleteAttmL2">
+		delete from attm
+		where new_name = #{delImgNewName}	
+	</delete>
+	
+	<update id="goodUp">
+		update board
+		set good = good + 1
+		where board_no = #{boardNo}	
+	</update>
+	
+	<update id="goodDown">
+		update board
+		set good = good - 1
+		where board_no = #{boardNo}	
+	</update>
+	
+	<select id="getTopList" resultType="Board">
+		<![CDATA[
+			select *
+			from (
+				select *
+				from board
+				order by good desc
+			)
+			where rownum <=3
+		]]>
+	</select>
+
+	<select id="searchBoard" resultType="BoardAttm">
+		<![CDATA[
+			select *
+			from board left join attm using(board_no)
+			where title like '%'||#{searchTitle}||'%' or show_title like '%'||#{searchTitle}||'%' 
+			order by board.create_date desc
+		]]>
+	</select>
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</mapper>

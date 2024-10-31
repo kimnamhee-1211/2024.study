@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+	p{
+		margin-bottom : 10px !important;
+	}
+	tbody{
+		overflow: hidden !important;
+        text-overflow: ellipsis !important; 	
+	
+	}
+	.nav-link{
+		font-size : 20px !important;;
+	}
+	#simple-list-example{
+		margin-top : 60px;
+	}
+</style>
+
+</head>
+<body style="background:#f8efed; margin:0;">
+		
+		<div th:replace="~{common/navbar :: navbar}"></div>
+		
+		<div class="container-lg m-6 p-6">
+			<div class="row">
+				
+				<div class="col-2">
+					<div id="simple-list-example" class="d-flex flex-column gap-2 simple-list-example-scrollspy border-end">
+				        <a class="nav-link" href="#Information">Information</a>
+				        <a class="nav-link" href="#Board">Board</a>
+				        <a class="nav-link" href="#Support">Support</a>
+				        <a class="nav-link" href="#Visitors">Visitors</a>
+				        <a class="nav-link" href="#EventWinner">EventWinner</a>
+				    </div>				
+				</div>
+				
+				
+				
+				<div class="col">
+					 <div data-bs-spy="scroll" data-bs-target="#simple-list-example" data-bs-offset="0" data-bs-smooth-scroll="true" class="scrollspy-example" tabindex="0">
+						<div class="row m-5" id="Information">			
+							<h3>Information</h3>
+							<div class="col-4 p-4">
+								<img th:src="${session.loginUser.profilNewName}" alt="No Image" style="width:180px;height:230px;margin-left:80px" />				
+							</div>					
+							<div class="col-4 p-5">
+								<h5>Admin Name : [[${session.loginUser.name}]]</h5><br>
+								<h6>Admin Email : [[${session.loginUser.Email}]]</h6>
+								<h6>Admin Levle : [[${session.loginUser.createDate}]]</h6>
+								<h6>Admin Levle : [[${session.loginUser.adLevel}]]</h6>
+							</div>					
+							<div class="col-3 p-5">
+								<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal2" class="btn btn-outline-secondary">Change Info</button>
+								<br><br>
+								<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-outline-secondary">Register Admin</button>
+							</div>				
+						</div>
+										
+						<div class="row m-5 p-5" id="Board" style="border:1px solid lightgray;">
+							<h3>Board</h3><br>
+							<div class="row">
+								<div class="col-4 p-5">
+									<h5>total : [[${boardData.size()}]]</h5>
+									<br>
+									<h6 id="monthBoard"></h6>				
+								</div>
+								<div class="col" style="padding-left:80px">
+									<canvas id="boardDateChart"></canvas>					
+								</div>
+							</div>
+							<div class="row m-3 p-3">
+								<div class="col-5 m-2 p-3" style="margin-right:50px;">
+									<h5>▷category</h5>
+									<canvas id="boardCateChart"></canvas>
+								</div>
+								<div class="col-5 m-2 p-3">
+									<h5>▷month category</h5>
+									<canvas id="boardCateMonthChart"></canvas>
+								</div>
+							</div>			
+						</div>
+						
+						<div class="row m-5 p-5" id="Support" style="border:1px solid lightgray;">
+							<h3>Support</h3><br>
+							<div class="row">
+								<div class="col-4 p-5" id="supportDiv"></div>
+								<div class="col" style="padding-left:80px">
+									<canvas id="supportChart"></canvas>				
+								</div>
+							</div>
+							<div class="row m-2">
+								<h5>▷highest Supporter</h5>
+								<table class="table">
+								  <thead>
+								    <tr>
+								      <th scope="col">&nbsp&nbsp#</th>
+								      <th scope="col">name</th>
+								      <th scope="col">email</th>
+								      <th scope="col">total amount</th>
+								      <th scope="col">count</th>
+								    </tr>
+								  </thead>
+								  <tbody>
+								    <tr th:each=" b : ${bestPaylist}">
+								      <th scope="row">&nbsp&nbsp[[${b.rank}]]</th>
+								      <td>[[${b.buyerName}]]</td>
+								      <td>[[${b.buyerEmail}]]</td>
+								      <td>[[${b.totalAmount}]]</td>
+								      <td>[[${b.total}]]</td>
+								    </tr>
+								   </tbody>
+								  </table>							
+							</div>
+										
+						</div>
+						
+						<div class="row m-5 p-5" id="Visitors" style="border:1px solid lightgray;">
+							<h3>Visitors</h3><br>
+							<div class="col-4 p-5" id="visitorsDiv">
+							</div>
+							<div class="col" style="padding-left:80px">
+								<canvas id="visitorsChart"></canvas>				
+							</div>			
+						</div>
+					
+						<div class="row m-5 p-5" id="EventWinner" style="border:1px solid lightgray;" >
+							<h3>EventWinner</h3><br>
+							<div class="row" th:if="${thisMonth == null}">
+								<div class="col-3 p-3 m-3">
+									<button type="button" onclick="eventWinner()" class="btn btn-outline-secondary" style="width:180px;height:140px;margin-bottom:10px;">eventWinner</button><br>
+									<button type="button" onclick="eventWinnerConfirm()" class="btn btn-outline-secondary" style="width:180px;height:50px;">confirm</button>
+								</div>
+								<div class="col p-2 m-3 eventWinner"></div>			
+							</div>
+							<div class="row" th:if="${thisMonth != null}">
+								<div class="col p-3 m-3">
+									<p>no : [[${thisMonth.eventNo}]]</p>
+									<p>nickName : [[${thisMonth.nickName}]]</p>
+									<p>email : [[${thisMonth.email}]]</p>
+									<p>title : [[${thisMonth.title}]]</p>
+									<p>expextation : [[${thisMonth.expectation}]]</p>
+									<p>create date : [[${thisMonth.createDate}]]</p>
+								</div>	
+							</div>
+							<div class="row m-2">
+								<h5>▷All list</h5>
+								<table class="table">
+								  <thead>
+								    <tr>
+								      <th scope="col" width="5%">&nbsp&nbsp#</th>
+								      <th scope="col" width="15%">nickName</th>
+								      <th scope="col" width="20%">email</th>
+								      <th scope="col" width="20%">title</th>
+								      <th scope="col" width="25%">expextation</th>
+								      <th scope="col" width="15%">create date</th>
+								    </tr>
+								  </thead>
+								  <tbody>
+								    <tr th:each=" e : ${elist}">
+								      <th scope="row">&nbsp&nbsp[[${e.eventNo}]]</th>
+								      <td>[[${e.nickName}]]</td>
+								      <td>[[${e.email}]]</td>
+								      <td>[[${e.title}]]</td>
+								      <td>[[${e.expectation}]]</td>
+								      <td>[[${e.createDate}]]</td>
+								    </tr>
+								  </tbody>
+								</table>
+							</div>				
+						</div>			
+					</div>
+				</div>		
+			</div>
+		
+		
+		
+			<div style="display:scroll;position:fixed;bottom:80px;right:80px;">
+				<a href="#">
+					<svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" fill="pink" class="bi bi-balloon-heart-fill" viewBox="0 0 16 16">
+					  <path fill-rule="evenodd" d="M8.49 10.92C19.412 3.382 11.28-2.387 8 .986 4.719-2.387-3.413 3.382 7.51 10.92l-.234.468a.25.25 0 1 0 .448.224l.04-.08c.009.17.024.315.051.45.068.344.208.622.448 1.102l.013.028c.212.422.182.85.05 1.246-.135.402-.366.751-.534 1.003a.25.25 0 0 0 .416.278l.004-.007c.166-.248.431-.646.588-1.115.16-.479.212-1.051-.076-1.629-.258-.515-.365-.732-.419-1.004a2 2 0 0 1-.037-.289l.008.017a.25.25 0 1 0 .448-.224l-.235-.468ZM6.726 1.269c-1.167-.61-2.8-.142-3.454 1.135-.237.463-.36 1.08-.202 1.85.055.27.467.197.527-.071.285-1.256 1.177-2.462 2.989-2.528.234-.008.348-.278.14-.386"/>
+					</svg>			
+				</a>
+			</div>
+		
+		
+		</div>
+		
+		<br><br><br><br><br><br>
+
+		<!-- Modal -->
+		<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		  <div class="modal-dialog modal-lg">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h1 class="modal-title fs-5" id="exampleModalLabel">Register Admin</h1>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <form action="enroll.ad" method="post" enctype="multipart/form-data" id="enrollform">
+			      <div class="modal-body">
+			      	<div class=" d-flex">
+					 <input class="form-control me-2" type="text" placeholder="name" name="name">	      	
+				     <input class="form-control me-2" type="password" placeholder="password" name="password">
+				     <input class="form-control me-2" type="email" placeholder="email" name="email">
+				     <input name="adfile" class="form-control" type="file">	
+				    </div>
+				    <div id="enrollMsg" style="color:red;margin:10px;"></div>			  
+			      </div>
+			      
+			      <div class="modal-footer">
+			      	<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			        <button type="button" id="enrollButton" class="btn btn-outline-secondary">Register</button>
+			      </div>
+		      </form>
+		    </div>
+		  </div>
+		</div>
+
+		<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+		  <div class="modal-dialog modal-lg">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h1 class="modal-title fs-5" id="exampleModalLabel2">Change Info</h1>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <form action="changeInfo.ad" method="post" enctype="multipart/form-data" id="changeform">
+			      <div class="modal-body">
+			      	<div class=" d-flex">
+					 <input class="form-control me-2" type="text" placeholder="name" name="name" th:value="${session.loginUser.name}">	      	
+				     <input class="form-control me-2" type="password" placeholder="password" name="password" id="changePass">
+				     <input class="form-control me-2" type="email" placeholder="email" name="email" th:value="${session.loginUser.email}">
+				     <input name="adfile" class="form-control" type="file"><br>
+				    </div>	
+				    <div style="color:green;margin:10px;">If you want to change your profile picture, please upload a new photo.</div>
+				    <div id="changeMsg" style="color:red;margin:10px;"></div>	  
+			      </div>
+			      
+			      <div class="modal-footer">
+			      	<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			        <button type="button" id="changeButton" class="btn btn-outline-secondary">Change</button>
+			      </div>
+		      </form>
+		    </div>
+		  </div>
+		</div>
+
+	
+
+
+
+
+	<script th:inline="javascript">
+
+		window.onload=()=>{
+			
+			
+			
+			
+			
+		    /*<![CDATA[*/
+	        const enrollMsg = /*[[${enrollMsg}]]*/'enrollMsg';
+	        /*]]>*/
+		
+		
+			if(enrollMsg){
+				$('#exampleModal').modal('show');
+				$('#enrollMsg').text(enrollMsg);
+			}
+		}
+		
+		
+		const enrollButton = document.querySelector('#enrollButton');
+		
+		enrollButton.addEventListener('click',()=>{
+			const enrollform = document.querySelector('#enrollform');
+			const enrollInputs = enrollform.querySelectorAll('input');
+			let checkInput = true;
+			for(const input of enrollInputs){
+				if(input.value == null || input.value.trim() == ""){
+					$('#enrollMsg').text('Please fill in all the fields.');
+					input.focus();				
+					checkInput = false;
+				}				
+			}
+			if(checkInput){
+				enrollform.submit();
+			}				
+		});
+		
+		
+		const changeButton = document.querySelector('#changeButton');
+		changeButton.addEventListener('click',()=>{
+			const changeform = document.querySelector('#changeform');
+			const changePass = changeform.querySelector('#changePass');
+			if(changePass.value == null || changePass.value.trim() == ""){
+				$('#changeMsg').text('Please enter your current or new password to update your information.');
+				changePass.focus();				
+			}else{
+				changeform.submit();
+			}
+			
+		});
+		
+		
+		
+		let winnerConfirmed = false;
+		
+		eventWinner=()=>{
+			
+			if(winnerConfirmed) return false;
+			
+			$.ajax({
+				url : 'eventWinner.ad',
+				success : data => {
+					const eventWinner = document.querySelector('.eventWinner');
+					const inner = 
+						`<p class = "eventNo" id="${data.eventNo}">no : ${data.eventNo}</p>
+						<p>nickName : ${data.nickName}</p>
+						<p>email : ${data.email}</p>
+						<p>title : ${data.title}</p>
+						<p>expextation : ${data.expectation}</p>
+						<p>create date : ${data.createDate}</p>`
+					eventWinner.innerHTML = inner;
+									
+				}
+			});
+		}
+		
+			
+		eventWinnerConfirm=()=>{
+			const eventWinner = document.querySelector('.eventNo');
+			if(eventWinner){
+				const eventNo = eventWinner.id			
+				$.ajax({
+					url : 'eventWinnerConfirm.ad',
+					type : 'POST',
+					dataType : 'json',
+					data : {eventNo : eventNo},
+					success : data => {
+						if(data > 0 ){
+							window.alert("The winners for this month's event have been selected.")
+							winnerConfirmed = true;
+						}
+					}
+				});					
+			}				
+		}			
+		
+		
+			
+		
+		const now = new Date();
+		const num = 1;
+		monthfunction=(num)=>{	 
+		  return (now.getMonth() + num).toString()
+		}
+		  
+		const year = now.getFullYear().toString()
+		  		  
+		/*<![CADATA[*/
+		const boardData = /*[[${boardData}]]*/[];
+		/*]]>*/
+		
+		const boardDataDate = [0,0,0,0,0,0];
+		const boardDataCate = [0,0,0,0];
+		
+		const boardDataCateMonth = [];
+		const boardDataCateMonthCount = [0,0,0,0];
+				
+		for(const b of boardData){			
+			switch(b.createDate.slice(0,7)){
+			case year + '-' + monthfunction(num-5) : boardDataDate[0] += 1; break;
+			case year + '-' + monthfunction(num-4) : boardDataDate[1] += 1; break;
+			case year + '-' + monthfunction(num-3) : boardDataDate[2] += 1; break;
+			case year + '-' + monthfunction(num-2) : boardDataDate[3] += 1; break;
+			case year + '-' + monthfunction(num-1) : boardDataDate[4] += 1; break;
+			case year + '-' + monthfunction(num) : boardDataDate[5] += 1; boardDataCateMonth.push(b); break;
+			default : break;
+			}
+			
+			switch(b.category){
+			case '회화' : boardDataCate[0] += 1; break;
+			case '조각/설치' : boardDataCate[1] += 1; break;
+			case '종합' : boardDataCate[2] += 1; break;
+			case '기타' : boardDataCate[3] += 1; break;
+			default : break;
+			}			
+		}
+		
+		
+		for(const b of boardDataCateMonth){
+			switch(b.category){
+			case '회화' : boardDataCateMonthCount[0] += 1; break;
+			case '조각/설치' : boardDataCateMonthCount[1] += 1; break;
+			case '종합' : boardDataCateMonthCount[2] += 1; break;
+			case '기타' : boardDataCateMonthCount[3] += 1; break;
+			default : break;
+			}			
+		}
+		
+		
+		
+		
+		
+		
+		const boardDateChart = document.getElementById('boardDateChart');
+		
+		new Chart(boardDateChart, {
+		  type: 'bar',
+		  data: {
+		    labels: [monthfunction(num-5), monthfunction(num-4), monthfunction(num-3), monthfunction(num-2), monthfunction(num-1), monthfunction(num)],
+		    datasets: [{
+		      label: 'board',
+		      data: boardDataDate,
+		      borderWidth: 1,
+		      borderColor: 'rgb(75, 192, 192)',
+		      backgroundColor: 'rgb(75, 192, 192)'
+		    }]
+		  },
+		  options: {
+		    scales: {
+		      y: {
+		        beginAtZero: true
+		      }
+		    }
+		  }
+		});
+		
+		$('#monthBoard').html("this month total : " + boardDataDate[5])
+ 
+		
+		const boardCateChart = document.getElementById('boardCateChart');
+		
+		new Chart(boardCateChart, {
+		  type: 'doughnut',
+		  data: {
+		    labels: ['회화', '조각/설치', '종합', '기타'],
+		    datasets: [{
+		      label: 'category',
+		      data: boardDataCate,
+		      borderWidth: 1,
+		      backgroundColor: [
+		          'rgb(255, 99, 132)',
+		          'rgb(75, 192, 192)',
+		          'rgb(255, 205, 86)',
+		          'rgb(201, 203, 207)',
+		          'rgb(54, 162, 235)'
+		        ]		      	
+		    }]
+		  }
+		});
+		
+		
+		
+		const boardCateMonthChart = document.getElementById('boardCateMonthChart');
+		
+		new Chart(boardCateMonthChart, {
+		  type: 'doughnut',
+		  data: {
+		    labels: ['회화', '조각/설치', '종합', '기타'],
+		    datasets: [{
+		      label: 'categoryMonth',
+		      data: boardDataCateMonthCount,
+		      borderWidth: 1,
+		      backgroundColor: [
+		          'rgb(255, 99, 132)',
+		          'rgb(75, 192, 192)',
+		          'rgb(255, 205, 86)',
+		          'rgb(201, 203, 207)',
+		          'rgb(54, 162, 235)'
+		        ]		      	
+		    }]
+		  }
+		});
+		
+			
+		/*<![CADATA[*/
+			const paylist = /*[[${paylist}]]*/[];
+		/*]]>*/
+		
+		const paytotal = paylist.length;
+		let paytotalAmount = 0
+		
+		const ym = year + '-' + (now.getMonth()+1).toString();
+		
+		const supportDateData = [0,0,0,0,0,0];
+		const supportAmountDateData = [0,0,0,0,0,0];
+		
+		for(const p of paylist){
+			paytotalAmount += p.amount			
+			switch(p.payDate.slice(0,7)){
+			case year + '-' + monthfunction(num-5) : supportDateData[0] += 1; supportAmountDateData[0] += p.amount; break;
+			case year + '-' + monthfunction(num-4) : supportDateData[1] += 1; supportAmountDateData[1] += p.amount; break;
+			case year + '-' + monthfunction(num-3) : supportDateData[2] += 1; supportAmountDateData[2] += p.amount; break;
+			case year + '-' + monthfunction(num-2) : supportDateData[3] += 1; supportAmountDateData[3] += p.amount; break;
+			case year + '-' + monthfunction(num-1) : supportDateData[4] += 1; supportAmountDateData[4] += p.amount; break;
+			case year + '-' + monthfunction(num) : supportDateData[5] += 1; supportAmountDateData[5] += p.amount; break;
+			default : break;
+			}				
+		}
+
+		
+		const supportinnrt = 
+			`<h5>total : ${paytotal}</h5>
+			<h5>total amount : ₩${paytotalAmount}</h5>
+			<br>
+			<h6>this month total : ${supportDateData[5]}</h6>	
+			<h6>this month total amount: ₩${supportAmountDateData[5]}</h6>`
+		$('#supportDiv').html(supportinnrt);
+		
+		
+		const supportChart = document.getElementById('supportChart');
+		
+		new Chart(supportChart, {
+		  type: 'line',
+		  data: {
+		    labels: [monthfunction(num-5), monthfunction(num-4), monthfunction(num-3), monthfunction(num-2), monthfunction(num-1), monthfunction(num)],
+		    datasets: [{
+		    	label: 'count',
+				data: supportDateData,
+				borderWidth: 1,
+				borderColor: 'rgb(255, 159, 64)',
+				backgroundColor: 'rgb(255, 159, 64)'
+		    	}, {
+		    	label: 'amount',
+			    data: supportAmountDateData,
+			    borderWidth: 1,
+			    borderColor: 'rgb(255, 205, 86)',
+			    backgroundColor: 'rgb(255, 205, 86)'
+		    }]
+		  },
+		  options: {
+		    scales: {
+		      y: {
+		        beginAtZero: true
+		      }
+		    }
+		  }
+		});
+		
+		
+		
+		/*<![CADATA[*/
+			const visitorLogAll = /*[[${visitorLogAll}]]*/'visitorLogAll';
+		/*]]>*/
+		
+		/*<![CADATA[*/
+			const visitorLogAdmin = /*[[${visitorLogAdmin}]]*/'visitorLogAdmin';
+		/*]]>*/
+		
+		
+		const visitorTotal = visitorLogAll.split("\n");
+		const visitorAdminTotal = visitorLogAdmin.split("\n");
+
+		
+		
+		const visitorTotalArr = [0,0,0,0,0,0];
+		
+		for(const b of visitorTotal){			
+			switch(b.slice(0,7)){
+			case year + '-' + monthfunction(num-5) : visitorTotalArr[0] += 1; break;
+			case year + '-' + monthfunction(num-4) : visitorTotalArr[1] += 1; break;
+			case year + '-' + monthfunction(num-3) : visitorTotalArr[2] += 1; break;
+			case year + '-' + monthfunction(num-2) : visitorTotalArr[3] += 1; break;
+			case year + '-' + monthfunction(num-1) : visitorTotalArr[4] += 1; break;
+			case year + '-' + monthfunction(num) : visitorTotalArr[5] += 1; break;
+			default : break;
+			}			
+			
+		}
+		
+		const visitorGeneralTotalArr = [...visitorTotalArr]
+		
+		for(const b of visitorAdminTotal){			
+			switch(b.slice(0,7)){
+			case year + '-' + monthfunction(num-5) : visitorGeneralTotalArr[0] -= 1; break;
+			case year + '-' + monthfunction(num-4) : visitorGeneralTotalArr[1] -= 1; break;
+			case year + '-' + monthfunction(num-3) : visitorGeneralTotalArr[2] -= 1; break;
+			case year + '-' + monthfunction(num-2) : visitorGeneralTotalArr[3] -= 1; break;
+			case year + '-' + monthfunction(num-1) : visitorGeneralTotalArr[4] -= 1; break;
+			case year + '-' + monthfunction(num) : visitorGeneralTotalArr[5] -= 1; break;
+			default : break;
+			}			
+			
+		}
+		
+		const visitorsChart = document.getElementById('visitorsChart');
+		
+		new Chart(visitorsChart, {
+		  type: 'line',
+		  data: {
+		    labels: [monthfunction(num-5), monthfunction(num-4), monthfunction(num-3), monthfunction(num-2), monthfunction(num-1), monthfunction(num)],
+		    datasets: [{
+		    	label: 'all',
+				data: visitorTotalArr,
+				borderWidth: 1,
+				borderColor: 'rgb(54, 162, 235)',
+				backgroundColor: 'rgb(54, 162, 235)'
+		    	}, {
+		    	label: 'general',
+			    data: visitorGeneralTotalArr,
+			    borderWidth: 1,
+			    borderColor: 'rgb(255, 99, 132)',
+			    backgroundColor: 'rgb(255, 99, 132)'
+		    }]
+		  },
+		  options: {
+		    scales: {
+		      y: {
+		        beginAtZero: true
+		      }
+		    }
+		  }
+		});
+		
+		const visitorInner = 
+			`<h5>total : ${visitorTotal.length - 1}</h5>
+			<h5>general total : ${visitorTotal.length - visitorAdminTotal.length}</h5>
+			<br>
+			<h6>this month total : ${visitorTotalArr[5]}</h6>
+			<h6>general this month total : ${visitorGeneralTotalArr[5]}</h6>`
+		
+		$('#visitorsDiv').html(visitorInner);
+
+	
+	</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

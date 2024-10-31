@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+	
+	<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+	
+</head>
+<style>
+	#supportButton, #supportModal{
+		margin:5px;
+		width:330px;
+		border:2px solid pink;
+		color:pink;
+		font-weight:800;
+	
+	}
+	#supportButton:hover, #supportModal:hover{
+		background:pink;
+		color:white;
+	}
+	
+
+
+</style>
+<body style="background:#f8efed; margin:0;">
+		
+	<div th:replace="~{common/navbar :: navbar}"></div>
+		
+	<div class="container-lg m-6 p-6">
+	
+		<div class="row m-5">
+			<div id="carouselExampleIndicators" class="carousel slide">
+			  <div class="carousel-indicators">
+			    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+			    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+			    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+			  </div>
+			  <div class="carousel-inner mx-auto" style="width:800px;height:350px;background:lightgray">
+			    <div class="carousel-item active goDetail">
+			      <img th:src="${list[0].newName}" width="800px" height="350px" class="d-block w-100" alt="No Image" th:if="${list != null && list.size() > 0}">
+			      <input type="hidden" th:value="${list[0].boardNo}" th:if="${list != null && list.size() > 0}" class="boardNo">
+			      <img src="logo.PNG" width="800px" height="350px" class="d-block w-100" alt="No Content" th:if="${list == null || list.size() == 0}">
+			    </div>				    
+			    <div class="carousel-item goDetail" th:each="i : ${#numbers.sequence(1,2)}" th:if="${ list != null && list.size() > i}">
+			      <img th:src="${list[i].newName}" width="800px" height="350px" class="d-block w-100" alt="No Image">
+			      <input type="hidden" th:value="${list[i].boardNo}" class="boardNo">
+			      <img src="logo.PNG" width="800px" height="350px" class="d-block w-100" alt="No Content">
+			    </div>				    
+			  </div>
+			  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+			    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+			    <span>Previous</span>
+			  </button>
+			  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+			  	<span>Next</span>
+			    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+			  </button>
+			</div>
+		</div>
+	
+
+		<div class="row" style="min-width:1300px;">
+			<div class="col-7 m-3">
+				
+				<th:block th:if="${list != null && list.size() > 3}">
+					<div class="card m-3 mb-5 goDetail" style="width:750px;height:200px" th:each="c : ${#numbers.sequence(3, list.size()-1)}">
+					  <input type="hidden" th:value="${list[c].boardNo}" class="boardNo">
+					  <div class="row g-0">
+					    <div class="col-md-4" style="padding:5px;">
+					      <img th:src="${list[c].newName}" width="260px" height="190px" alt="...">
+					    </div>
+					    <div class="col-md-8 p-3">
+					      <div class="card-body">
+					        <h5 class="card-title">[[${list[c].title}]]</h5>
+					        <p class="card-text">[[${list[c].intro}]]</p>
+					        <p class="card-text">
+					        	<small class="text-body-secondary">#[[${list[c].showTitle}]]</small>
+					        	<small class="text-body-secondary">#[[${list[c].artist}]]</small></br>
+					        	<small class="text-body-secondary">#[[${list[c].startDate}]] ~ [[${list[c].endDate}]]</small>
+					        </p>
+					      </div>
+					    </div>
+					  </div>
+					</div>
+				</th:block>					
+									
+			</div>
+			
+			<div class="col m-3 p-3">
+								
+				<div class="row justify-content-md-center">
+					<div class="card" style="width:400px;">
+						<div class="card-body">
+						 <img th:src="${mainAd.profilNewName}" class="card-img-top" alt="no image" style="width:180px;height:230px;margin:5px;margin-left:80px;margin-bottom:10px;">
+						  <h5 class="card-title">Reviewer [[${mainAd.name}]]</h5>
+						  <p class="card-text">
+						  	Space for the reviewer's thoughts and feelings.</br></br>
+						  	"Understanding myself better and nurturing self-love through art appreciation and writing"</p>
+						</div>
+						<ul class="list-group list-group-flush">
+						  <li class="list-group-item"> Me, A humanities coder who loves art, books, and writing.</li>
+						  <li class="list-group-item"> Me, Always positive and proactive, a planner by nature.</li>
+						  <li class="list-group-item"> Love someone</br> ♥ Lucio Fontana</br> ♥ William Somerset Maugham</br> ♥ 기형도</li>
+						</ul>
+						<div class="card-body">
+						  Contact Me ☎
+						  <a href="#" class="card-link">[[${mainAd.email}]]</a>
+						</div>
+						<div class="card-body">
+							Support makes a great impact!</br>
+							<button type="button" id="supportButton" class="btn btn-outline-secondary supportButton" data-bs-toggle="modal" data-bs-target="#exampleModal"> Support</button>
+						</div>
+					</div>				
+				</div>				
+			</div>
+					
+		</div> 
+		
+		<div style="display:scroll;position:fixed;bottom:80px;right:80px;">
+			<a href="#">
+				<svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" fill="pink" class="bi bi-balloon-heart-fill" viewBox="0 0 16 16">
+				  <path fill-rule="evenodd" d="M8.49 10.92C19.412 3.382 11.28-2.387 8 .986 4.719-2.387-3.413 3.382 7.51 10.92l-.234.468a.25.25 0 1 0 .448.224l.04-.08c.009.17.024.315.051.45.068.344.208.622.448 1.102l.013.028c.212.422.182.85.05 1.246-.135.402-.366.751-.534 1.003a.25.25 0 0 0 .416.278l.004-.007c.166-.248.431-.646.588-1.115.16-.479.212-1.051-.076-1.629-.258-.515-.365-.732-.419-1.004a2 2 0 0 1-.037-.289l.008.017a.25.25 0 1 0 .448-.224l-.235-.468ZM6.726 1.269c-1.167-.61-2.8-.142-3.454 1.135-.237.463-.36 1.08-.202 1.85.055.27.467.197.527-.071.285-1.256 1.177-2.462 2.989-2.528.234-.008.348-.278.14-.386"/>
+				</svg>			
+			</a>
+		</div>
+	
+	</div>
+	
+	<br><br><br><br><br><br>
+
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h1 class="modal-title fs-5" id="exampleModalLabel" style="font-weight:800;">Support</h1>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body">
+	      	<div class="row m-2 mb-4">
+	      		Would you like to support Namhee?</br>
+	     		Your support means a lot!
+	     	</div>
+	        <div class="row m-2">
+				<label for="sponsor" class="col-sm-3 col-form-label">Your Name</label>
+			    <div class="col-sm-9">
+			      <input type="text" class="form-control" name="sponsorName" id="sponsorName">
+			    </div>
+			  </div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Close</button>
+	        <button type="button" id="supportModal" onclick="requestPay()" class="btn btn-outline-secondary">Support</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>		
+	
+	
+	<script th:inline="javascript">
+		const goDetails = document.querySelectorAll('.goDetail');
+		for(const goDetail of goDetails){
+			goDetail.addEventListener('click', function(){
+				let boardNo = this.querySelector('.boardNo').value;
+				location.href = 'goDetailBoard.bo?boardNo='+boardNo;
+			})
+		}
+
+		
+		const requestPay=()=>{
+			
+			
+			
+			let uid = "support-" + parseInt(new Date().toISOString().slice(0, 10).replace(/-/g, '') + (Math.random() * 9000).toString());
+			let sponsorName = $('#sponsorName').val();
+			
+			IMP.init("imp73271784");
+			IMP.request_pay(
+					  {
+					    channelKey: "channel-key-7dea7bcc-8e62-4223-8c14-e2256f12c32f",
+					    merchant_uid: uid, // 주문 고유 번호
+					    name: "support",
+					    amount: 100,
+					    buyer_name: sponsorName,
+					  },
+				function (response) {
+					if (response.error_code != null) {
+				      return alert(`결제에 실패하였습니다. 에러 내용: ${response.error_msg}`);
+				    }					
+					if (response.error_code == null) {
+						
+						$.ajax({
+							url : "payment",
+							data : {impUid:response.imp_uid, merchantUid : response.merchant_uid, amount : response.paid_amount,
+								payMethod : response.pay_method, buyerName : response.buyer_name, buyerEmail : response.buyer_email,
+								status : response.status},
+							type: 'POST',
+							dataType : 'json',
+							success : data => {
+								if(data >0){
+									window.location.reload();
+									window.alert("Thank you for your support!");
+								} 
+								
+							}
+							
+						})
+						
+						
+						
+						
+					
+					}
+					
+					
+					
+				},
+						 
+			
+			);
+			
+			
+			
+			
+		}
+
+		
+		
+	</script>
+	
+		
+	
+</body>
+</html>

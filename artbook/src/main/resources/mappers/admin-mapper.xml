@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.portfolio.artbook.admin.model.dao.AdminMapper">
+	
+	<insert id="enrollAdmin">
+		insert into admin
+		values(#{name}, #{password}, #{profilOriginName}, #{profilNewName}, sysdate, #{profilPath}, default, sysdate, #{email})	
+	</insert>
+
+	<select id="loginAdmin"  resultType="Admin">
+		select *
+		from admin
+		where name = #{name}
+	
+	</select>
+	
+	<select id="getAdName"  resultType="string">
+		select name
+		from admin	
+	</select>
+
+	<select id="getMainAdmin"  resultType="Admin">
+		select *
+		from admin
+		where ad_level = 1	
+	</select>
+
+	<update id="eventWinnerConfirm">
+		update event
+		set status = 'Y'
+		where event_no = #{eventNo}	
+	</update>
+
+
+	<select id="EventWinnerList"  resultType="Event">
+		select *
+		from event
+		where status = 'Y'	
+		order by create_date desc 
+	</select>
+
+
+	<select id="boardData" resultType="Board">
+		select board_no, create_date, category
+		from board
+		order by create_date desc 
+	</select>
+	
+	<select id="getAllPayment" resultType="Payment">
+		select *
+		from payment
+		where status = 'paid'
+		order by pay_date desc 
+	</select>
+
+	<select id="getbestPaylist" resultType="Payment">
+		<![CDATA[
+			select *
+			from (
+				select buyer_name, buyer_email, sum(amount) totalAmount, count(buyer_name) total, RANK() OVER (ORDER BY sum(amount) DESC) AS rank
+		        from payment
+		        where status = 'paid'
+		        group by buyer_name, buyer_email
+		        order by totalAmount desc
+			)
+			where rownum <=3
+		]]>
+	</select>
+
+	<update id="updateAdmin">
+		update admin
+		set name = #{a.name}, password = #{a.password}, 
+			profil_origin_name = #{a.profilOriginName}, profil_new_name= #{a.profilNewName}, profil_path = #{a.profilPath}, 
+			email = #{a.email}, update_date = sysdate
+		where name = #{oldName}	
+	</update>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</mapper>

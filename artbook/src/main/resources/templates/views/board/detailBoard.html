@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+	
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <script src="https://unpkg.com/gijgo@1.9.14/js/gijgo.min.js" type="text/javascript"></script>
+    <link href="https://unpkg.com/gijgo@1.9.14/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-bs4.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-bs4.min.js"></script>
+<style>
+
+	#writeContainer{
+		border : 1px solid lightgray;
+		width:1000px;
+	}
+	
+	hr{
+		border : 1px solid lightgray;
+	}
+	.bigbtn{
+		width:200px !important;
+		margin:5px 30px !important;
+	}
+	
+	#content {
+        border : 1px solid lightgray;
+        border-radius: 6px;
+        padding : 20px;
+        background : white;
+    }
+    label{
+    	font-weight:800 !important;
+    	font-size:18px !important;
+    }
+    .nametag{
+    	font-weight:800 !important;
+    }
+	#imgDiv{
+		display : inline-block !important;
+	}
+	#goodButton{
+		margin:5px;
+		width:200px;
+		border:2px solid pink;
+		color:pink;
+		font-weight:800;
+		background:none;
+	
+	}
+	#goodButton:hover, #goodButton:active, #goodButton:focus{
+		background:pink;
+		color:white;
+		box-shadow:none;	
+	}
+	
+	
+	
+
+</style>
+</head>
+<body style="background:#f8efed; margin:0;">
+		
+		<div th:replace="~{common/navbar :: navbar}"></div>
+		
+		<div class="container-lg p-4">
+		
+			<br><br>
+			<div class="container-md m-6 p-6" id="writeContainer">
+			<input type="hidden" th:value="${b.boardNo}" id="boardNo">
+			
+				<div class="row m-4 justify-content-md-center">
+					<br/>
+					<img th:src="${b.newName}" class="img-fluid rounded-start" alt="No Image" style="width:700px;height:400px">				
+					<br/>
+				</div>
+				<hr/>
+									
+				<div class="row m-3 mt-5 text-center"><h3 class="nametag">Exhibition</h3></div>
+				
+				<div class="row m-4 justify-content-md-center">
+				  <div class="col-7">
+				  	<label for="showTitle" class="form-label">Exhibition Title</label>
+				    <div class="board">[[${b.showTitle}]]</div>
+				  </div>
+				  <div class="col-4">
+				  	<label for="artist" class="form-label">Artist</label>
+				    <div class="board">[[${b.artist}]]</div>
+				  </div>
+				</div>
+				
+				<div class="row m-4 justify-content-md-center">
+				  <div class="col-2 mb-3">
+				  	<label for="startDate" class="form-label">Start Date</label>
+				    <div class="board">[[${b.startDate}]]</div>
+				  </div>
+				  <div class="col-3 mt-4 text-center">
+					<h4>~ </h4>
+				  </div>
+				  <div class="col-6 mb-3">
+				  	<label for="endDate" class="form-label">End Date</label>
+				    <div class="board">[[${b.endDate}]]</div>
+				  </div>										
+				</div>
+				
+				<hr>
+				
+				<div class="row m-3 mt-5 text-center"><h3 class="nametag">Review</h3></div>
+				
+				<div class="row m-4 justify-content-md-center">
+				  <div class="col-9">
+				  	<label for="title" class="form-label">Title</label>
+				    <div class="board">[[${b.title}]]</div>
+				  </div>
+				  <div class="col-3">
+				  	<label for="category" class="form-label">Category</label>
+					<div class="board">[[${b.category}]]</div>
+				  </div>
+				</div>
+									
+				<div class="row m-4 mb-3">
+				  <label for="intro" class="form-label">Intro</label>
+				  <div class="board">[[${b.intro}]]</div>
+				</div>
+				
+				<div class="row m-4 mb-5">
+				  <label for="content" class="form-label">Content</label>
+				  <div class="board" id="content" style="white-space: pre-wrap;">[[${b.content}]]</div>				
+				</div>					
+				<hr>
+				
+				<div class="row m-4 mb-5">
+				  <label class="form-label">Photo</label>
+				  <div class="col-1 pre"></div>
+				  <div class="col" id="imgDiv"></div>
+				  <div class="col-1 next"></div>
+				</div><hr>
+				
+				<th:block  th:if="${session.loginUser != null}">
+					<div class="row m-4 justify-content-md-center">
+						<button type="button" id="updateButton" onclick="updateBoard()" class="btn btn-secondary bigbtn">update</button>
+						<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-light bigbtn">delete</button>
+					</div><hr>
+				</th:block>
+				
+				<div class="row m-4 justify-content-md-center">
+					<button type="button" id="goodButton" class="btn btn-outline-secondary notClicked">♥ LIKE</button>
+				</div>
+				
+			
+			</div>
+			
+			<div style="display:scroll;position:fixed;bottom:80px;right:80px;">
+				<a href="#">
+					<svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" fill="pink" class="bi bi-balloon-heart-fill" viewBox="0 0 16 16">
+					  <path fill-rule="evenodd" d="M8.49 10.92C19.412 3.382 11.28-2.387 8 .986 4.719-2.387-3.413 3.382 7.51 10.92l-.234.468a.25.25 0 1 0 .448.224l.04-.08c.009.17.024.315.051.45.068.344.208.622.448 1.102l.013.028c.212.422.182.85.05 1.246-.135.402-.366.751-.534 1.003a.25.25 0 0 0 .416.278l.004-.007c.166-.248.431-.646.588-1.115.16-.479.212-1.051-.076-1.629-.258-.515-.365-.732-.419-1.004a2 2 0 0 1-.037-.289l.008.017a.25.25 0 1 0 .448-.224l-.235-.468ZM6.726 1.269c-1.167-.61-2.8-.142-3.454 1.135-.237.463-.36 1.08-.202 1.85.055.27.467.197.527-.071.285-1.256 1.177-2.462 2.989-2.528.234-.008.348-.278.14-.386"/>
+					</svg>			
+				</a>
+			</div>					
+		
+		</div>
+		
+		<br><br><br><br><br><br>
+		
+		
+		<!-- Modal -->
+		<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h1 class="modal-title fs-5" id="exampleModalLabel">Message</h1>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body">
+		        정말 게시글을 삭제하시겠습니까?
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+		        <button type="button" id="deleteButton" onclick="deleteBoard()" class="btn">Delete</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		
+		
+		
+		
+	<script th:inline="javascript">
+				
+		
+		
+		const boardNo = document.querySelector('#boardNo').value
+		updateBoard=()=>{
+			location.href='goUpdateBoard.bo?boardNo=' + boardNo;
+		}
+		deleteBoard=()=>{
+			location.href='deleteBoard.bo?boardNo=' + boardNo;
+		}
+		
+		const pre = document.querySelector('.pre');
+		const next = document.querySelector('.next');	
+		window.onload=()=>{
+			let page = 1;
+			pagination(page);
+
+			pre.addEventListener('click', function(){
+				if(pre.innerHTML != ''){
+					page--
+					pagination(page);
+				}
+			})
+
+		
+			next.addEventListener('click', function(){
+				if(next.innerHTML != ''){
+					page++
+					pagination(page);
+				}
+			})
+			
+			let good = false;
+			const goodButton = document.querySelector('#goodButton');
+			goodButton.addEventListener('click', function(){
+				if(!good){
+					$.ajax({
+						url : 'goodUp.bo',
+						type: 'post',
+						dataType: 'json',
+						data : {"boardNo" : boardNo},
+						success : data => {
+							if(data > 0){
+								console.log("Thank you for liking!")
+								good = true;
+								goodButton.style.background='pink';
+								goodButton.style.color='white';
+							}
+						},
+				        error: 
+					       	 data => console.log(data)
+					});
+					
+				} else if(good){
+					$.ajax({
+						url : 'goodDown.bo',
+						type: 'post',
+						dataType: 'json',
+						data : {"boardNo" : boardNo},
+						success : data => {
+							if(data > 0){
+								console.log("I believe you'll like it again")
+								good = false;
+								goodButton.style.background='none';
+								goodButton.style.color='pink';
+							}
+						},
+				        error: 
+					       	 data => console.log(data)
+					});	
+				}
+			})
+			
+		}
+				
+		
+		pagination=(page)=>{
+			$.ajax({
+				url : 'goDetailBoardPhoto.bo?boardNo=' + boardNo + '&page=' + page,
+				type: 'post',
+				dataType: 'json',
+				success: data => {
+					
+					const pi = data.pi
+					const alist = data.alist
+					if(pi.listCount > 0){
+						
+						pre.innerHTML = ''
+						next.innerHTML = ''
+						if(pi.currentPage > 1){
+							pre.style.paddingTop='85px';
+							pre.innerHTML = '<h2>&laquo;</h2>'
+						}
+						
+						const imgDiv = document.querySelector('#imgDiv');
+						imgDiv.innerHTML = '';
+						for(const a of alist){
+							const img = document.createElement('div');
+							img.className = 'img';
+							img.style.display = 'inline-block';
+							img.style.margin = '10px 28px';
+							img.innerHTML='<img src=' + a + ' width="300px;" height="200px" class="d-block" alt="No Image">';
+							imgDiv.append(img)
+							
+						}
+
+						if(pi.currentPage < pi.maxPage){
+							next.style.paddingTop='85px';
+							next.innerHTML = '<h2>&raquo;</h2>'					
+						}						
+					}					
+					
+				},
+		        error: 
+		       	 data => console.log(data)
+			});			
+		}
+
+		
+		
+		
+	
+
+	
+	
+	
+	</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

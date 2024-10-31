@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<configuration>
+	<property name="LOG_PATH" value="D:\artBook\artBook\log\visitor"/>
+	
+	<appender name="visitorAdmin" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+		<file>${LOG_PATH}/admin</file>
+		
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			 <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+		
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_PATH}/visitorAdmin.log.%d{yyyyMMdd}</fileNamePattern>
+		</rollingPolicy>
+	
+	</appender>
+	
+	<logger name="com.portfolio.artbook.common.Interceptor.AdminLoginInterceptor" level="info" additivity="false">
+		<appender-ref ref="visitorAdmin"/>
+	</logger>
+	
+	
+	
+	<appender name="visitorAll" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+		<file>${LOG_PATH}/all</file>
+		
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			 <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+		
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_PATH}/visitorAll.log.%d{yyyyMMdd}</fileNamePattern>
+		</rollingPolicy>
+	
+	</appender>
+	
+	<logger name="com.portfolio.artbook.common.Interceptor.VisitorInterceptor" level="info" additivity="false">
+		<appender-ref ref="visitorAll"/>
+	</logger>
+	
+
+</configuration>
